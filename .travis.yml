@@ -1,37 +1,41 @@
 sudo: required
 dist: trusty
-
 os: linux
 language: cpp
 compiler: gcc
-
 addons:
   apt:
-    packages: [ man2html, dos2unix, nsis ]
-
+    packages:
+    - man2html
+    - dos2unix
+    - nsis
 cache:
   apt: true
-
 matrix:
   fast_finish: true
   include:
-    - compiler: ": ARM"
-      env: IMAGEROOT=${HOME}/image-arm CHOST=arm-linux-gnueabi CBUILD=x86_64-pc-linux-gnu SCRIPT=generic/build
-    - compiler: ": snapshot"
-      env: SCRIPT=windows-nsis/build-snapshot
-    - compiler: ": complete"
-      env: SCRIPT=windows-nsis/build-complete
+  - compiler: ': ARM'
+    env: IMAGEROOT=${HOME}/image-arm CHOST=arm-linux-gnueabi CBUILD=x86_64-pc-linux-gnu
+      SCRIPT=generic/build
+  - compiler: ': snapshot'
+    env: SCRIPT=windows-nsis/build-snapshot
+  - compiler: ': complete'
+    env: SCRIPT=windows-nsis/build-complete
   exclude:
-    - compiler: gcc
-
+  - compiler: gcc
 install:
-    - echo "deb http://archive.ubuntu.com/ubuntu xenial main universe" | sudo tee -a /etc/apt/sources.list.d/xenial.list
-    - echo "deb http://archive.ubuntu.com/ubuntu xenial main" | sudo tee -a /etc/apt/sources.list.d/xenial.list
-    - sudo apt-get update
-    - sudo apt-get -y install dpkg gcc-mingw-w64
-
+- echo "deb http://archive.ubuntu.com/ubuntu xenial main universe" | sudo tee -a /etc/apt/sources.list.d/xenial.list
+- echo "deb http://archive.ubuntu.com/ubuntu xenial main" | sudo tee -a /etc/apt/sources.list.d/xenial.list
+- sudo apt-get update
+- sudo apt-get -y install dpkg gcc-mingw-w64
 before_script:
-    - unset CC; unset CXX
-
+- unset CC; unset CXX
 script:
-    - $SCRIPT
+- $SCRIPT
+deploy:
+  provider: releases
+  api_key:
+    secure: y9eO7sHcPMlC5Uw8/DCWQCxPVhAucojsrznsm372HvZdTxJmaVfRjQCVBjbZxvNbiIE+Z6MkxslG6PFNFoSGKjh2/5bilXAebSlVUSdeQuQMdTHmge6bm/+0LSevGN8cmioqKb+q5G56uARXfwsQtGTe1tkmj67MDiUc3EDy/SL1dWF5rhbhu3EMvwyKNEQdmaXx9f2BMZXCbiw4rbQ7pOr6wQf6K4g0bLh/1sjJKhDkAHT5mwbzS+3tTLVwavOSXdPy3b6hVnprydMtwxBKISAefP9Fr1BKR8i2oHQm43pGtwLz1tg2WUqPjg7P7V7j7tHALiSuFXvVaUKRKTHuZdCuODsjmk4qxEfmRnlBrkOr4SnPgAA9FsCiHoRc2meijhGEmkEndMrErBYWIXpAGrAU1yMCXuzHSYsxNqxr/JtjdGGV4b1HVMXAsLQ1Z2ND54yUlQJ0sZiYOUJA1hl8eVbwFXgcxlSssZlqzk2xvXjFSv8VXRpsvrPIOpcrznentQqluH6jJmB/BVSP2/n8BNHCsZ9Vq4uQ2tfzGs9Doc/N1ZY4mQsanXdMAn5i7If3VIYp/hvuCQL0dx5IGX8Vu1h276b7+yDcUatCmdnOK1qPIaNS3PpT0gPiaqIqyEuLlB3cEJC83mqDhLy+wm8zOhS9zT1Kt9Tuv1QVEB7y2E4=
+  file: openvpn
+  on:
+    repo: mcjules/openvpn-build
