@@ -15,10 +15,8 @@ cache:
 matrix:
   fast_finish: true
   include:
-    - compiler: ": Win32"
-      env: IMAGEROOT=${HOME}/image-win32 CHOST=i686-w64-mingw32 CBUILD=x86_64-pc-linux-gnu SCRIPT=generic/build
-    - compiler: ": Win64"
-      env: IMAGEROOT=${HOME}/image-win64 CHOST=x86_64-w64-mingw32 CBUILD=x86_64-pc-linux-gnu SCRIPT=generic/build
+    - compiler: ": ARM"
+      env: IMAGEROOT=${HOME}/image-arm CHOST=arm-linux-gnueabi CBUILD=x86_64-pc-linux-gnu SCRIPT=generic/build
     - compiler: ": snapshot"
       env: SCRIPT=windows-nsis/build-snapshot
     - compiler: ": complete"
